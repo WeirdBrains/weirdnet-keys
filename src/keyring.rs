@@ -419,7 +419,8 @@ pub fn export<P: KeyFiles + ?Sized>(
     Ok(written.into_iter().map(|(p, _)| p).collect())
 }
 
-/// Read a key file that may be age-encrypted (asking for the password only if it is).
+/// Read a key file that may be age-encrypted, binary or ASCII-armored (asking for the
+/// password only if it is).
 #[cfg(feature = "age")]
 pub fn read_maybe_age<E: From<KeysError>>(path: &Path, password: impl FnOnce() -> Result<SecretString, E>) -> Result<Zeroizing<String>, E> {
     use crate::agefile;

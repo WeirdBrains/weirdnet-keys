@@ -374,6 +374,20 @@ fn exports_are_separate_decryptable_and_all_or_nothing() {
     assert!(matches!(read_maybe_age::<KeysError>(&dir.join("words.txt.age"), || Ok(pw("wrong"))), Err(KeysError::Unlock(_))));
     let svc = read_maybe_age::<KeysError>(&dir.join("service-keys.json.age"), || Ok(p.clone())).unwrap();
     assert!(svc.contains("\"envelope\"") && svc.contains("\"service_keys\""));
+    // The same words, ASCII-armored (as Morph's identity backups are), read the same way.
+    let words = read_maybe_age::<KeysError>(&dir.join("words.txt.age"), || Ok(p.clone())).unwrap();
+    let mut armored = vec![];
+    {
+        use std::io::Write;
+        let mut w = age::armor::ArmoredWriter::wrap_output(&mut armored, age::armor::Format::AsciiArmor).unwrap();
+        w.write_all(&std::fs::read(dir.join("words.txt.age")).unwrap()).unwrap();
+        w.finish().unwrap();
+    }
+    std::fs::write(t.path().join("words.armored.age"), &armored).unwrap();
+    let again = read_maybe_age::<KeysError>(&t.path().join("words.armored.age"), || Ok(p.clone())).unwrap();
+    assert_eq!(*again, *words);
+    assert_eq!(from_words(&again).unwrap(), master);
+    assert!(matches!(read_maybe_age::<KeysError>(&t.path().join("words.armored.age"), || Ok(pw("wrong"))), Err(KeysError::Unlock(_))));
     assert!(export(&d, &Key32::random().unwrap(), &p, &t.path().join("x"), &ExportItem::ALL).is_err());
 
     std::fs::write(t.path().join("k").join("fail"), b"").unwrap();

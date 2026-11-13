@@ -16,7 +16,7 @@ crates. Nothing here invents a cipher, a KDF or a format of its own.
   traits the application implements; this crate never opens a database.
 - `dark`: shards sealed with a shard password for custodians, and the claim tag that finds
   them again.
-- `age` (default feature): password age files for exports.
+- `age` (default feature): password age files for exports. Reading (`agefile::decrypt`, `read_maybe_age`) accepts binary and ASCII-armored files.
 
 ## Profiles
 
