@@ -1,6 +1,6 @@
 [package]
 name = "weirdnet-keys"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2024"
 rust-version = "1.99"
 description = "Weirdnet keys: 256-bit keys, BIP39 words, Shamir shards, HKDF and Argon2id derivation, XChaCha20-Poly1305 sealing, X25519 agreement, HMAC, an envelope keyring with rotation, rekey and recovery, dark-shard sealing and age exports, under versioned label profiles."
